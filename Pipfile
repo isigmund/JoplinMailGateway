@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 imapclient = "*"
 joppy = "*"
+pyyaml = "*"
+logzero = "*"
 
 [dev-packages]
 
