@@ -1,0 +1,12 @@
+
+imap:
+    server: mail.familie-sigmund.eu
+    port: 993
+    user: ingo
+    password: FlicFlac68
+
+joplin:
+    syncFrequency: 60
+    dataApiPort": 41184
+
+
