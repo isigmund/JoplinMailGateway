@@ -2,7 +2,7 @@
 imap:
     server: mail.familie-sigmund.eu
     port: 993
-    user: ingo
+    user: joplin
     password: FlicFlac68
 
 joplin:

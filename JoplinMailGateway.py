@@ -10,8 +10,28 @@ __license__ = "MIT"
 import argparse
 from logzero import logger, logging
 import yaml
-import imapclient
+from imapclient import IMAPClient
 import joppy
+import email
+import time
+
+
+def fetch_new_emails(config):
+    with IMAPClient(config['imap']['server']) as server:
+        server.login(config['imap']['user'], config['imap']['password'])
+        server.select_folder("INBOX")
+
+        messages = server.search("UNSEEN")
+        logger.info(messages)
+
+        for uid, message_data in server.fetch(messages, "RFC822").items():
+            email_message = email.message_from_bytes(message_data[b"RFC822"])
+            print(uid, email_message.get("From"), email_message.get("Subject"), email_message.get("Body"))
+            email_message.get()
+        
+        server.logout()
+
+
 
 
 def main(args):
@@ -23,6 +43,20 @@ def main(args):
     config = yaml.safe_load(open(args.conf_file))
     logger.info(f"Configuration read from : {args.conf_file}")
     logger.debug(f"Configuration: {config}")
+    logger.debug(f"Configuration: {config['imap']['user']}")
+
+    while True:
+        try:
+            fetch_new_emails(config)
+            time.sleep(30)
+            # TODO: every 10 minutes reestablish idle mode (server.IDLE)
+
+        except KeyboardInterrupt:
+            break
+
+
+
+
 
 
 
